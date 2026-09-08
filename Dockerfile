@@ -40,29 +40,15 @@ COPY . .
 # Copy .env.example to .env if not exists
 RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
-# 🔧 FIX: Remove Telescope references before install
-RUN sed -i '/TelescopeServiceProvider/d' config/app.php 2>/dev/null || true && \
-    rm -f app/Providers/TelescopeServiceProvider.php 2>/dev/null || true && \
-    rm -f config/telescope.php 2>/dev/null || true
+# 🔧 FIX: Remove Telescope references
+RUN sed -i '/TelescopeServiceProvider/d' config/app.php 2>/dev/null || true
+RUN rm -f app/Providers/TelescopeServiceProvider.php 2>/dev/null || true
+RUN rm -f config/telescope.php 2>/dev/null || true
 
-# 🔧 FIX: Rename files to match class names (PSR-4)
-RUN if [ -f Modules/Entertainment/Transformers/TVshowDataDetailsResouce.php ]; then \
-        CLASS_NAME=$$(grep -o "class [A-Za-z]*Resource" Modules/Entertainment/Transformers/TVshowDataDetailsResouce.php | head -1 | cut -d' ' -f2); \
-        if [ ! -z "$$CLASS_NAME" ]; then \
-            mv Modules/Entertainment/Transformers/TVshowDataDetailsResouce.php Modules/Entertainment/Transformers/$$CLASS_NAME.php; \
-        fi; \
-    fi && \
-    if [ -f app/Jobs/ImportTvShowsJob.php ]; then \
-        CLASS_NAME=$$(grep -o "class Import[^ ]*" app/Jobs/ImportTvShowsJob.php | head -1 | cut -d' ' -f2); \
-        if [ ! -z "$$CLASS_NAME" ] && [ "$$CLASS_NAME" != "ImportTvShowsJob" ]; then \
-            mv app/Jobs/ImportTvShowsJob.php app/Jobs/$$CLASS_NAME.php; \
-        fi; \
-    fi
-
-# Install PHP dependencies (no dev, no scripts)
+# 🔧 FIX: Install dependencies (skip scripts to avoid Telescope errors)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# Run package discover separately
+# 🔧 Run package discover separately with error handling
 RUN php artisan package:discover --ansi || true
 
 # Generate application key
