@@ -40,36 +40,30 @@ COPY . .
 # Copy .env.example to .env if not exists
 RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
-# 🔧 FIX: Remove Telescope references
-RUN if ! grep -q "laravel/telescope" composer.json; then \
-        sed -i '/TelescopeServiceProvider/d' config/app.php 2>/dev/null || true; \
-        rm -f app/Providers/TelescopeServiceProvider.php 2>/dev/null || true; \
+# 🔧 FIX: Remove Telescope references before install
+RUN sed -i '/TelescopeServiceProvider/d' config/app.php 2>/dev/null || true && \
+    rm -f app/Providers/TelescopeServiceProvider.php 2>/dev/null || true && \
+    rm -f config/telescope.php 2>/dev/null || true
+
+# 🔧 FIX: Rename files to match class names (PSR-4)
+RUN if [ -f Modules/Entertainment/Transformers/TVshowDataDetailsResouce.php ]; then \
+        CLASS_NAME=$$(grep -o "class [A-Za-z]*Resource" Modules/Entertainment/Transformers/TVshowDataDetailsResouce.php | head -1 | cut -d' ' -f2); \
+        if [ ! -z "$$CLASS_NAME" ]; then \
+            mv Modules/Entertainment/Transformers/TVshowDataDetailsResouce.php Modules/Entertainment/Transformers/$$CLASS_NAME.php; \
+        fi; \
+    fi && \
+    if [ -f app/Jobs/ImportTvShowsJob.php ]; then \
+        CLASS_NAME=$$(grep -o "class Import[^ ]*" app/Jobs/ImportTvShowsJob.php | head -1 | cut -d' ' -f2); \
+        if [ ! -z "$$CLASS_NAME" ] && [ "$$CLASS_NAME" != "ImportTvShowsJob" ]; then \
+            mv app/Jobs/ImportTvShowsJob.php app/Jobs/$$CLASS_NAME.php; \
+        fi; \
     fi
 
-# 🔧 FIX: Rename files to match class names
-RUN find . -type f -name "Import*.php" -exec grep -l "class Import" {} \; | while read file; do \
-        CLASS_NAME=$(grep -o "class [A-Za-z]*" "$file" | head -1 | cut -d' ' -f2); \
-        DIR=$(dirname "$file"); \
-        if [ ! -z "$CLASS_NAME" ] && [ ! -f "$DIR/$CLASS_NAME.php" ]; then \
-            mv "$file" "$DIR/$CLASS_NAME.php" 2>/dev/null || true; \
-        fi; \
-    done
+# Install PHP dependencies (no dev, no scripts)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# 🔧 FIX: Rename Resource files
-RUN find Modules/Entertainment/Transformers -type f -name "*Resource.php" -exec grep -l "class.*Resource" {} \; | while read file; do \
-        CLASS_NAME=$(grep -o "class [A-Za-z]*" "$file" | head -1 | cut -d' ' -f2); \
-        DIR=$(dirname "$file"); \
-        if [ ! -z "$CLASS_NAME" ] && [ ! -f "$DIR/$CLASS_NAME.php" ]; then \
-            mv "$file" "$DIR/$CLASS_NAME.php" 2>/dev/null || true; \
-        fi; \
-    done
-
-# 🔧 Update composer.json autoload
-RUN composer dump-autoload --no-interaction || true
-
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-req=php || \
-    composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-req=php --no-scripts
+# Run package discover separately
+RUN php artisan package:discover --ansi || true
 
 # Generate application key
 RUN php artisan key:generate --force || true

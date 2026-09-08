@@ -8,15 +8,13 @@ use Modules\Subscriptions\Transformers\PlanResource;
 use Modules\Entertainment\Transformers\ReviewResource;
 use Modules\CastCrew\Transformers\CastCrewListResource;
 use Modules\Entertainment\Transformers\EpisodeResource;
-use Modules\Entertainment\Transformers\Backend\CommonContentResourceV3;
+use Modules\Entertainment\Transformers\TvshowResource;
 use Modules\Entertainment\Models\EntertainmentGenerMapping;
 use Modules\Entertainment\Models\Entertainment;
 use Modules\Subscriptions\Models\Plan;
 use Carbon\Carbon;
 use Modules\Episode\Models\Episode;
 use Modules\Subscriptions\Models\Subscription;
-use Modules\Entertainment\Transformers\ClipResource;
-use Illuminate\Support\Facades\Crypt;
 
 class TvshowDetailResource extends JsonResource
 {
@@ -33,17 +31,7 @@ class TvshowDetailResource extends JsonResource
 
         $genre_ids = $genres->pluck('genre_id')->toArray();
         $entertaintment_ids = EntertainmentGenerMapping::whereIn('genre_id', $genre_ids)->pluck('entertainment_id')->toArray();
-        $more_items = Entertainment::whereIn('id', $entertaintment_ids)
-                                    ->where('type','tvshow')
-                                    ->where('status',1)
-                                    ->where('deleted_at', null)
-                                    ->limit(7)
-                                    ->get()
-                                    ->except($this->id);
-        $currentProfile = getCurrentProfileSession('is_child_profile');
-        if($currentProfile == 1){
-            $more_items = $more_items->where('is_restricted', 0);
-        }
+        $more_items = Entertainment::whereIn('id', $entertaintment_ids)->where('type','tvshow')->where('status',1)->limit(7)->get()->except($this->id);
 
         $plans = [];
         $plan = $this->plan;
@@ -54,80 +42,39 @@ class TvshowDetailResource extends JsonResource
         $casts = [];
         $directors = [];
         foreach ($this->entertainmentTalentMappings as $mapping) {
-
             if($mapping->talentprofile){
 
-            if ($mapping->talentprofile->type === 'actor') {
-                $casts[] = $mapping->talentprofile;
-            } elseif ($mapping->talentprofile->type === 'director') {
-                $directors[] = $mapping->talentprofile;
-            }
-           }
+                if ($mapping->talentprofile->type === 'actor') {
+                    $casts[] = $mapping->talentprofile;
+                } elseif ($mapping->talentprofile->type === 'director') {
+                    $directors[] = $mapping->talentprofile;
+                }
+             }
         }
 
         $tvShowLinks = [];
-        foreach(($this->season ?? collect())->where('status', 1)->where('deleted_at', null) as $season){
-          $episodes = Episode::with('subtitles')->where('season_id', $season->id)
-                      ->where('status', 1)
-                      ->where('deleted_at', null)
-                      ->when(request()->has('is_restricted'), function ($query) {
-                          $query->where('is_restricted', request()->is_restricted);
-                      })
-                      ->when(getCurrentProfileSession('is_child_profile') && getCurrentProfileSession('is_child_profile') != 0, function ($query) {
-                          $query->where('is_restricted', 0);
-                      })
-                      ->get();
-
-            $allHaveEpisodeNumber = $episodes->every(function ($episode) {
-                return !is_null($episode->episode_number);
-            });
-
-            if ($allHaveEpisodeNumber && $episodes->count() > 0) {
-                $episodes = $episodes
-                    ->sortBy(fn ($episode) => (int) $episode->episode_number)
-                    ->values();
-            }
-
+        foreach($this->season as $season){
+            $episodes = Episode::where('season_id', $season->id)->get();
             $totalEpisodes = $episodes->count();
             $tvShowLinks[] = [
                 'season_id' => $season->id,
                 'name' => $season->name,
                 'short_desc' => $season->short_desc,
                 'description' => $season->description,
-                'poster_image' => setBaseUrlWithFileName($season->poster_url,'image',$this->type),
-                'poster_tv_image' => setBaseUrlWithFileName($season->poster_tv_url,'image',$this->type),
+                'poster_image' => setBaseUrlWithFileName($season->poster_url,'image','season'),
                 'trailer_url_type' => $season->trailer_url_type,
-                'trailer_url ' => $season->trailer_url_type=='Local' ? setBaseUrlWithFileName($season->trailer_url,'video',$this->type) : $season->trailer_url,
+                'trailer_url ' => $season->trailer_url_type=='Local' ? setBaseUrlWithFileName($season->trailer_url,'video','season') : $season->trailer_url,
                 'total_episodes' => $totalEpisodes,
-                'access' => $season->access,
-                'price' => (int)$season->price,
-                'purchase_type' => $season->purchase_type,
-                'access_duration' => $season->access_duration,
-                'discount'=> $season->discount,
-                'available_for' => $season->available_for,
                 'episodes' => EpisodeResource::collection(
-                                    $episodes->take(8)->map(function ($episode) {
+                                    $episodes->take(5)->map(function ($episode) {
                                         return new EpisodeResource($episode, $this->user_id);
                                     })
                                 ),
             ];
 
         }
-        $header = request()->headers->all();
-        $device_type = !empty($header['device-type'])? $header['device-type'][0] : []; //for tv
-        $getDeviceTypeData = Subscription::checkPlanSupportDevice($request->user_id,$device_type);
+        $getDeviceTypeData = Subscription::checkPlanSupportDevice($request->user_id);
         $deviceTypeResponse = json_decode($getDeviceTypeData->getContent(), true); // Decode to associative array
-
-        $reviews = collect($this->reviews ?? []);
-
-         if ($this->trailer_url_type == 'Local' && !empty($this->bunny_trailer_url && config('filesystems.active') == 'bunny')) {
-            $this->trailer_url_type = 'HLS';
-            $this->trailer_url = Crypt::encryptString($this->bunny_trailer_url);
-        } else {
-            $this->trailer_url = $this->trailer_url_type == 'Local'
-                ? setBaseUrlWithFileName($this->trailer_url,'video',$this->type)    
-                : $this->trailer_url;
-        }
 
         return [
             'id' => $this->id,
@@ -135,7 +82,7 @@ class TvshowDetailResource extends JsonResource
             'description' => strip_tags($this->description),
             'trailer_url_type' => $this->trailer_url_type,
             'type' => $this->type,
-            'trailer_url' => $this->trailer_url,
+            'trailer_url' => $this->trailer_url_type=='Local' ? setBaseUrlWithFileName($this->trailer_url,'video',$this->type) : $this->trailer_url,
             'movie_access' => $this->movie_access,
             'plan_id' => $this->plan_id,
             'plan_level' => $this->plan->level ?? 0,
@@ -157,12 +104,12 @@ class TvshowDetailResource extends JsonResource
             'your_review' => $this->your_review ?? null,
             'genres' => GenresResource::collection($genre_data),
             'plans' => PlanResource::collection($plans),
-            'three_reviews' => ReviewResource::collection($reviews->take(3)),
-            'reviews' => ReviewResource::collection($reviews),
+            'three_reviews' => ReviewResource::collection($this->reviews->take(3)),
+            'reviews' => ReviewResource::collection($this->reviews),
             'casts' => CastCrewListResource::collection($casts),
             'directors' => CastCrewListResource::collection($directors),
             'tvShowLinks' => $tvShowLinks,
-            'more_items' => CommonContentResourceV3::collection($more_items),
+            'more_items' => TvshowResource::collection($more_items),
             'status' => $this->status,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
@@ -171,15 +118,7 @@ class TvshowDetailResource extends JsonResource
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
             'is_device_supported' => $deviceTypeResponse['isDeviceSupported'],
-            'poster_tv_image' => setBaseUrlWithFileName($this->poster_tv_url,'image',$this->type),
-            'price' => (int)$this->price,
-            'discounted_price' => round((float)$this->price - ($this->price * ($this->discount / 100)), 2),
-            'purchase_type' => $this->purchase_type,
-            'access_duration' => $this->access_duration,
-            'discount'=> (float)$this->discount,
-            'available_for' => $this->available_for,
-            'is_clips_enabled' => $this->enable_clips,
-            'clips' => ClipResource::collection(($this->clips ?? collect())->where('content_type', 'tv_show')->values()),
+
         ];
     }
 }
