@@ -28,8 +28,6 @@ class AppServiceProvider extends ServiceProvider
 
         ini_set('memory_limit', '512M');
         if ($this->app->environment('local')) {
-            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
-            $this->app->register(TelescopeServiceProvider::class);
 
             $this->app->singleton(ChatGTPService::class, function ($app) {
                 return new ChatGTPService();

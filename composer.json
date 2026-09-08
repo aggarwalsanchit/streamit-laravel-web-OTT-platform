@@ -58,7 +58,6 @@
     "fakerphp/faker": "^1.9.1",
     "laravel/breeze": "^2.1",
     "laravel/pint": "^1.0",
-    "laravel/telescope": "^5.5",
     "mockery/mockery": "^1.4.4",
     "phpunit/phpunit": "^10.1",
     "spatie/laravel-ignition": "^2.0"
@@ -118,7 +117,6 @@
   "extra": {
     "laravel": {
       "dont-discover": [
-        "laravel/telescope",
         "barryvdh/laravel-ide-helper"
       ]
     }
