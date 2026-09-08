@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'main' => 'الرئيسية',
+    'dashboard' => 'اللوحة الرئيسية',
+    'calendar_booking' => 'Calendar Booking',
+    'service_provider' => 'Service Provider',
+    'booking' => 'Booking',
+    'service' => 'Service',
+    'list' => 'قائمة',
+    'category' => 'فئة',
+    'sub_category' => 'فئة فرعية',
+    'user' => 'عميل',
+    'employee' => 'موظف',
+    'finance' => 'المالية',
+    'tax' => 'ضرائب',
+    'staff_earning' => 'أرباح الموظفين',
+    'reports' => 'تقارير',
+    'daily_booking_report' => 'تقرير الحجز اليومي',
+    'overall_booking_report' => 'تقرير الحجز العام',
+    'payout_report' => 'تقرير المدفوعات',
+    'employee_report' => 'تقرير الموظفين',
+    'system' => 'النظام',
+    'settings' => 'الإعدادات',
+    'notification_list' => 'قائمة الإشعارات',
+    'notification_template' => 'قالب الإشعارات',
+    'app_banner' => 'لافتة التطبيق',
+];

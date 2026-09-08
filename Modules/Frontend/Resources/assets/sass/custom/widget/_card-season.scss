@@ -1,0 +1,104 @@
+.season-card{
+    background-color: var(--bs-gray-900);
+    border-radius: var(--bs-border-radius);
+    border: 1px solid transparent;
+    transition: all .3s ease 0s;
+    &.is-playing {
+        border-color: var(--bs-primary);
+        box-shadow: 0 0 25px rgba(var(--bs-primary-rgb), 0.4);
+        animation: pulseGlow 2s infinite;
+        .season-content {
+            h5 {
+                color: var(--bs-success);
+            }
+        }
+    }
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .season-image{
+        position: relative;
+
+        img{
+            aspect-ratio: 16/9;
+            width: 100%;
+        }
+        .product-premium {
+            position: absolute;
+            top: .875rem;
+            left: auto;
+            right: 1rem;
+            background: var(--bs-warning);
+            color: var(--bs-white);
+            border-radius: 100%;
+            height: 1.75rem;
+            width: 1.75rem;
+            line-height: 1.9rem;
+            text-align: center;
+            z-index: 100;
+            i {
+                font-size: $font-size-sm;
+            }
+        }
+        .product-rent {
+            position: absolute;
+            top: 0.875rem;
+            left: auto;
+            right: 1rem;
+            background: var(--bs-success);
+            color: var(--bs-white);
+            border-radius: var(--bs-border-radius);
+            text-align: center;
+            z-index: 100;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.5rem;
+            line-height: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            i {
+                font-size: 0.875rem;
+            }
+        }
+    }
+
+    .season-content {
+        padding: 1rem;
+        .episode-duration {
+            font-size: 12px;
+            opacity: .5;
+        }
+    }
+    .season-watch-btn{
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+        padding: 7px 16px;
+        background-color: var(--bs-gray-800);
+        color: var(--bs-white);
+        font-size: 12px;
+        font-weight: 500;
+        border-radius: var(--bs-border-radius);
+        border: none;
+        outline: none;
+        transition: all .3s ease-in;
+
+        &:hover{
+            background-color: var(--bs-primary);
+        }
+    }
+}
+
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 25px rgba(var(--bs-primary-rgb), 0.4);
+    }
+    50% {
+        box-shadow: 0 0 35px rgba(var(--bs-primary-rgb), 0.6);
+    }
+    100% {
+        box-shadow: 0 0 25px rgba(var(--bs-primary-rgb), 0.4);
+    }
+}

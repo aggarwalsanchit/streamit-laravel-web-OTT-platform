@@ -1,0 +1,83 @@
+// Figma: same rail cell as Genres — image area 266.67 × 330 (ratio preserved when narrower)
+$figma-rail-card-w: 266.67px;
+
+.continue-watch-card {
+  max-width: $figma-rail-card-w;
+  margin-inline: auto;
+
+  .image-link {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    aspect-ratio: 266.67 / 330;
+    overflow: hidden;
+
+    &::after {
+      content: "";
+      background-image: linear-gradient(360deg, #0C0B11 4.1%, rgba(12, 11, 17, 0) 65%);
+      position: absolute;
+      top: 0;
+      inset-inline-start: 0;
+      height: 100%;
+      width: 100%;
+      z-index: 2;
+    }
+  }
+
+  .continue-watch-image {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--bs-border-radius) var(--bs-border-radius) 0 0;
+    object-position: top center;
+    display: block;
+  }
+
+  .remove_btn {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    outline: none;
+    border: none;
+    padding: 0;
+    height: 22px;
+    width: 22px;
+    // line-height: 22px;
+    font-size: 18px;
+    text-align: center;
+    border-radius: calc(var(--bs-border-radius) / 2);
+    z-index: 4;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s ease-in-out;
+  }
+
+  &:hover {
+    .remove_btn {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .progress {
+    height: 2px;
+  }
+
+  .continue-watch-card-content {
+    background-color: var(--bs-gray-900);
+    padding: 15px 21px;
+    border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+  }
+
+  .title {
+    transition: all .3s ease-in;
+
+    &:hover {
+      color: var(--bs-primary);
+    }
+  }
+}

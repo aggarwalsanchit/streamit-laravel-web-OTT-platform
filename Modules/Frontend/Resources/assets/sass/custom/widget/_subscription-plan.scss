@@ -1,0 +1,333 @@
+ // upgrade pan
+.upgrade-plan {
+     margin-bottom: 80px;
+     .super-plan {
+         font-size: 28px;
+     }
+}
+
+.acc-icon {
+    padding: 1rem;
+    border-radius: var(--bs-border-radius);
+    i {
+        font-size: 48px;
+    }
+}
+
+.account-card {
+    transition: all .5s ease 0s;
+    border: 1px solid var(--bs-border-color);
+    &:hover {
+        border-color: var(--bs-primary);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(var(--bs-primary-rgb), 0.15);
+    }
+    .bg-primary-subtle {
+        background: rgba(var(--bs-primary-rgb), .15) !important;
+    }
+}
+
+
+// subscription tabs
+.subscription-plan-tabs {
+    .nav {
+        justify-content: center;
+        background: var(--bs-gray-900);
+        display: inline-flex;
+        padding: .5rem;
+        border: 1px solid var(--bs-border-color);
+        margin-bottom: 50px;
+        .nav-item {
+            .nav-link {
+                color: var(--bs-body-color);
+                padding: .8rem 1.5rem;
+                &.active {
+                    color: var(--bs-white);
+                }
+            }
+        }
+    }
+}
+.apply-coupon-title {
+    cursor: pointer;
+    .arrow {
+        display: inline-block;
+        transition: transform 0.3s ease;
+        border: solid var(--bs-heading-color);
+        border-width: 0 2px 2px 0;
+        padding: 4px;
+        transform: rotate(45deg); /* pointing right */
+    }
+    &[aria-expanded="true"] .arrow {
+        transform: rotate(225deg); /* pointing down */
+    }
+}
+ // subscription plan
+ .subscription-plan-wrapper {
+     position: relative;
+     padding: 40px;
+     background-color: var(--bs-gray-900);
+     border: 1px solid var(--bs-border-color);
+     border-radius: var(--bs-border-radius-xl);
+     transition: all 0.3s ease-in-out;
+     &.active {
+        background-color: var(--bs-primary-bg-subtle);
+        border-color: var(--bs-primary);
+        box-shadow: 0 20px 40px rgba(var(--bs-primary-rgb), 0.3);
+     }
+     &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(var(--bs-primary-rgb), 0.3);
+     }
+     .subscription-plan-header {
+        text-align: center;
+     }
+     .discount-offer {
+         position: absolute;
+         top: 0;
+         left: auto;
+         right: 0;
+         background: var(--bs-primary);
+         border-radius: 0 var(--bs-border-radius-xl);
+         padding: 6px 12px;
+         color: var(--bs-white);
+         font-size: $font-size-sm;
+     }
+
+     .subscription-plan-offer {
+         position: absolute;
+         top: -1px;
+         right: -1px;
+         padding: 8px 12px;
+         font-size: 14px;
+         font-weight: $font-weight-medium;
+         background: var(--bs-primary);
+         color: var(--bs-heading-color);
+         border-bottom-left-radius: 6px;
+         border-top-right-radius: 6px;
+     }
+
+     .subscription-plan-header {
+         .subscription-name {
+             font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--bs-white);
+            letter-spacing: -0.01em;
+         }
+
+         .subscription-price {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--bs-heading-color);
+            line-height: 1;
+            .subscription-price-desc {
+                font-weight: $font-weight-medium;
+                font-size: 16px;
+                color: var(--bs-body-color);
+            }
+         }
+     }
+
+     .subscription-details {
+         margin: 44px 0px 60px 0px;
+        li {
+            i {
+                margin-right: 4px;
+                vertical-align: middle;
+                font-size: 12px;
+                border-radius: 100%;
+                height: 20px;
+                width: 20px;
+                min-width: 20px;
+                line-height: 20px;
+                text-align: center;
+                &.text-success {
+                    background: var(--bs-success);
+                    color: var(--bs-white) !important;
+                }
+                &.text-danger {
+                    background: var(--bs-danger);
+                    color: var(--bs-white) !important;
+                }
+            }
+        }
+         ul {
+
+             .list-desc {
+                 margin-bottom: 22px;
+                 font-weight: $font-weight-medium;
+
+                 .active {
+                     color: var(--bs-heading-color);
+                 }
+
+             }
+         }
+     }
+
+     .subscription-btn {
+         padding: 16px;
+         width: 100%;
+         font-size: 14px;
+         font-weight: $font-weight-medium;
+     }
+ }
+
+ .available-coupons {
+     background-color: var(--bs-gray-900);
+
+     .coupan-list {
+         //  overflow-x: scroll;
+
+         .coupons-card {
+             background-color: var(--bs-gray-800);
+             border: 1px dashed var(--bs-border-color);
+
+             .coupons-status {
+                 color: var(--bs-primary);
+                 font-weight: $font-weight-medium;
+             }
+         }
+     }
+
+ }
+
+ .modal {
+    .coupons-card {
+        background-color: var(--bs-gray-800);
+        border: 1px dashed var(--bs-border-color);
+
+        .coupons-status {
+            color: var(--bs-primary);
+            font-weight: $font-weight-medium;
+        }
+    }
+ }
+
+.payment-method-box {
+    background: var(--bs-body-bg);
+    padding: .5rem 1rem;
+    border-radius: var(--bs-border-radius);
+    border: 1px solid var(--bs-border-color);
+    cursor: pointer;
+    &:has(.btn-check:checked) {
+        border-color: var(--bs-primary);
+        background: rgba(var(--bs-primary-rgb), .1);
+    }
+}
+
+.payment-icon{
+  width: 20px;
+  height: 20px;
+}
+
+.available-coupons-data {
+    max-height: 375px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    .coupon-option {
+        padding: 16px 20px;
+        background-color: var(--bs-body-bg);
+        border: 1px solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        transition: all 0.3s ease-in-out;
+        &:hover {
+            background: rgba(var(--bs-body-bg-rgb),.5);
+            transform: translateX(4px);
+        }
+        &:last-child {
+            margin-bottom: 0;
+        }
+        &:has(.form-check-input:checked) {
+            border-color: var(--bs-primary);
+        }
+        .coupon-details {
+            flex: 1;
+        }
+        .coupon-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--bs-heading-color);
+            margin-bottom: 4px;
+        }
+        .coupon-description {
+            font-size: 12px;
+            color: var(--bs-body-color);
+            margin-bottom: 6px;
+        }
+        .coupon-code {
+            font-size: 11px;
+            color: var(--bs-primary);
+            font-weight: 600;
+            background: var(--bs-primary-bg-subtle);
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .coupon-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--bs-success);
+        }
+        .coupon-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--bs-info);
+            color: var(--bs-white);
+            padding: 4px 8px;
+            border-radius: 0 4px 0 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+    }
+
+}
+
+.nav.coupon-tabs {
+    justify-content: space-around;
+    .nav-item {
+        width: 50%;
+        text-align: center;
+        .nav-link {
+            color: var(--bs-body-color);
+            border-bottom: 1px solid transparent;
+            background: transparent;
+            border-radius: 0;
+            width: 100%;
+            background: rgba(var(--bs-body-bg-rgb), .3);
+            &.active {
+                color: var(--bs-primary);
+                border-color: var(--bs-primary);
+                background: rgba(var(--bs-body-bg-rgb), .5);
+            }
+        }
+    }
+}
+
+
+
+
+ @include media-breakpoint-down(lg) {
+     .upgrade-plan {
+         margin-bottom: 50px;
+     }
+ }
+
+ @include media-breakpoint-down(sm) {
+     .upgrade-plan {
+         margin-bottom: 30px;
+     }
+
+ }

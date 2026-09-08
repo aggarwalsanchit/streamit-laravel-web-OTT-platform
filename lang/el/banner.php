@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title' => 'Πανό εφαρμογής',
+    'add_title' => 'Νέο πανό εφαρμογής',
+    'edit_title' => 'Επεξεργασία πανό εφαρμογής',
+    'lbl_image' => 'Εικόνα',
+    'lbl_title' => 'Τίτλος',
+    'lbl_select' => 'Επιλογή',
+    'lbl_type' => 'Τύπος',
+    'lbl_name' => 'Όνομα',
+    'lbl_status' => 'Κατάσταση',
+    'lbl_update_at' => 'Ενημερώθηκε στις',
+    'lbl_action' => 'Ενέργεια',
+    'status_update' => 'Η κατάσταση ενημερώθηκε με επιτυχία',
+    'lbl_banner_for' => 'Πανό για',
+    'lbl_web_banner' => 'Πανό Ιστού',
+    'lbl_tv_banner' => 'Πανό Τηλεόρασης',
+    'lbl_description' => 'Περιγραφή',
+    'lbl_home' => 'Home',
+    'lbl_movie' => 'Movie',
+    'lbl_tv_show' => 'TV Show',
+    'lbl_video' => 'Video',
+    'lbl_promotional' => 'Promotional',
+];

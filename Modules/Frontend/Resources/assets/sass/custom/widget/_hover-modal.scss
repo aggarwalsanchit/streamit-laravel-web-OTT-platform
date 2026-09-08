@@ -1,0 +1,108 @@
+// Hover Modal Styles - Expanding Card Effect
+.hover-card-container {
+  position: relative;
+  transition: all 0.3s ease;
+
+  .hover-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: var(--bs-gray-900);
+    border-radius: 0 0 0.5rem 0.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+    pointer-events: auto;
+    margin-top: 0;
+  }
+
+  &:hover .hover-modal-overlay {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+}
+
+.hover-modal-content {
+  background: transparent;
+  border-radius: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hover-modal-body {
+  padding: 1rem;
+
+  .iq-card {
+    margin: 0;
+    border: none;
+    background: transparent;
+
+    .block-images {
+      transform: none !important;
+      overflow: visible;
+
+      .image-box {
+        &::before {
+          display: none;
+        }
+
+        img {
+          mix-blend-mode: inherit;
+          aspect-ratio: 16/9;
+          border-radius: 0.5rem;
+        }
+      }
+
+      .card-description {
+        position: relative;
+        background: transparent;
+        padding: 1rem 0;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        bottom: 0;
+
+        &.with-transition {
+          opacity: 1;
+          visibility: visible;
+          transform: none;
+        }
+
+        .iq-title {
+          color: white;
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+
+        .movie-time,
+        .movie-language {
+          color: #ccc;
+          font-size: 0.875rem;
+        }
+
+        .btn {
+          margin-top: 1rem;
+        }
+      }
+    }
+
+    &::after {
+      display: none;
+    }
+  }
+}
+
+// Hide hover modal on mobile
+@include media-breakpoint-down(md) {
+  .hover-modal-overlay {
+    display: none !important;
+  }
+}

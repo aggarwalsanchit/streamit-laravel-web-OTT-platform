@@ -1,0 +1,37 @@
+.accordion {
+  .custom-accordion {
+    margin-bottom: 30px;
+    background-color: var(--bs-gray-900);
+    padding: 20px;
+    border: none;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .custom-accordion-button {
+      background-color: var(--bs-gray-900);
+      color: var(--bs-heading-color);
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: $font-weight-medium;
+      box-shadow: none;
+
+      &::after {
+        background-color: var(--bs-primary);
+        background-image: none;
+        -webkit-mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23333'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+        mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23333'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+      }
+    }
+
+    .custom-accordion-body {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  }
+}

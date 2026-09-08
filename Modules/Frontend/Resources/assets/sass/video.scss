@@ -1,0 +1,333 @@
+.video-player {
+  .video-js {
+    position: relative;
+    padding-bottom: 43%;
+    width: 100%;
+    height: 0;
+  }
+
+  .vjs-tech {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .vjs-control-bar {
+    width: 100%;
+  }
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 43%;
+  height: 0;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.video-js .vjs-skip-intro-button.vjs-control {
+  position: absolute;
+  top: auto;
+  bottom: 50px;
+  left: 20px;
+  height: auto;
+  width: auto;
+  background: var(--bs-primary);
+  padding: 1rem;
+  border-radius: var(--bs-border-radius);
+  font-size: 1rem;
+}
+
+.vjs-control-bar {
+
+  .vjs-skip-trainer-button.vjs-control,
+  .vjs-next-episode-button.vjs-control {
+    position: absolute;
+    bottom: 4em;
+    right: 16px;
+    background-color: var(--bs-primary);
+    color: var(--bs-white);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: .25em .8em;
+    border: none;
+    width: auto;
+    border-radius: var(--bs-border-radius);
+
+    &:hover {
+      text-shadow: none;
+    }
+
+    &::before {
+      content: "\e5a6";
+      font-size: 12px;
+      font-family: "Phosphor-Fill";
+      speak: never;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      letter-spacing: 0;
+      vertical-align: middle;
+      margin-right: .25rem;
+    }
+  }
+
+  // .vjs-next-episode-button {
+  //   .vjs-icon-placeholder {
+  //     &::after {
+  //       content: "\f123";
+  //       font-size: 18px;
+  //       font-family: VideoJS;
+  //       font-weight: normal;
+  //       font-style: normal;
+  //     }
+  //   }
+  // }
+
+  .vjs-previous-episode-button {
+    .vjs-icon-previous-item {
+      &::before {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+
+.vjs-skip-trainer-button:hover,
+.vjs-next-episode-button:hover {
+  background-color: rgba(43, 51, 63, 0.9);
+  text-shadow: 0 0 1em #fff;
+}
+
+.video-js .vjs-skip-trainer-button {
+  order: 6;
+}
+
+@include media-breakpoint-down(xl) {
+  .video-player {
+    .video-js {
+      padding-bottom: 56.25%;
+    }
+  }
+
+  .video-container {
+    padding-bottom: 56.25%;
+  }
+}
+
+
+@include media-breakpoint-down(sm) {
+  .vjs-control-bar {
+    .vjs-skip-trainer-button.vjs-control {
+      font-size: 10px;
+      bottom: 2.5rem;
+      line-height: 3;
+      padding: .15rem .5rem;
+
+      &::before {
+        font-size: 10px;
+      }
+    }
+  }
+
+  .video-js {
+    .vjs-control {
+      &:not(.vjs-time-control, .vjs-skip-trainer-button) {
+        width: 2.5em !important;
+      }
+    }
+  }
+}
+
+.vjs-next-episode-button.vjs-control.vjs-button {
+  width: unset;
+}
+
+.vjs-next-episode-button {
+  position: absolute;
+  bottom: 6em;
+  right: 16px;
+  background-color: rgba(43, 51, 63, 0.95);
+  /* Darker, more subtle background */
+  color: var(--bs-white);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 12px 16px;
+  border: none;
+  width: 280px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    background-color: rgba(43, 51, 63, 1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  }
+
+  .next-episode-poster {
+    width: 100%;
+    height: 80px;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+
+  .next-episode-text {
+    flex: 1;
+    color: var(--bs-white);
+    font-size: 15px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 10px;
+  }
+
+  .next-episode-timer {
+    flex-shrink: 0;
+    margin-left: 12px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--bs-white);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+}
+
+.vjs-control-bar {
+  .vjs-backword-button,
+  .vjs-forword-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: rgba(43, 51, 63, 0.85);
+    color: var(--bs-white);
+    gap: 6px;
+    padding: 0;
+    border: none;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    #backward-seconds-text,
+    #forward-seconds-text {
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .vjs-control-bar {
+    .vjs-backward-10-button,
+    .vjs-forward-10-button {
+      width: 2.5em;
+
+      svg {
+        width: 1.4em;
+        height: 1.4em;
+      }
+    }
+  }
+}
+
+.video-js {
+  .vjs-control.vjs-overlay-skip {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 60px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+    cursor: pointer;
+    z-index: 5;
+
+    svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%) scale(1.05);
+    }
+  }
+
+  .vjs-overlay-backword { left: 40%; }
+  .vjs-overlay-forword { right: 40%; }
+}
+
+
+.video-js.vjs-user-inactive .vjs-overlay-skip {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.10s ease;
+}
+
+.video-js.vjs-user-active .vjs-overlay-skip {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+@include media-breakpoint-down(sm) {
+  .video-js {
+    .vjs-overlay-skip {
+      width: 40px;
+      height: 40px;
+
+      svg {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    .vjs-overlay-backword { left: 10px; }
+    .vjs-overlay-forword { right: 10px; }
+  }
+}

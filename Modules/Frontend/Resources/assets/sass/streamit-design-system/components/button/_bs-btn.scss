@@ -1,0 +1,44 @@
+.btn {
+    transition: all .3s ease 0s;
+    &:hover {
+        transform: translateY(-2px);        
+    }
+    &.btn-primary {
+        &:hover {
+            box-shadow: 0 8px 25px rgba(var(--bs-primary-rgb), 0.4);
+        }
+    }
+    &.btn-dark {
+        &:hover {
+            box-shadow: 0 8px 25px rgba(var(--bs-dark-rgb), 0.4);
+        }
+    }
+    &.btn-success {
+        &:hover {
+            box-shadow: 0 8px 25px rgba(var(--bs-success-rgb), 0.4);
+        }
+    }
+    &.btn-danger {
+        &:hover {
+            box-shadow: 0 8px 25px rgba(var(--bs-danger-rgb), 0.4);
+        }
+    }
+    &.btn-warning {
+        &:hover {
+            box-shadow: 0 8px 25px rgba(var(--bs-warning-rgb), 0.4);
+        }
+    }
+    &.btn-info {
+        &:hover {
+            box-shadow: 0 8px 25px rgba(var(--bs-info-rgb), 0.4);
+        }
+    }
+    &.btn-link {
+        padding: 0;
+        box-shadow: none;
+        transform: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

@@ -1,0 +1,118 @@
+# Dependencies
+/vendor
+/node_modules
+
+# Environment files
+.env
+.env.backup
+.env.*.local
+
+# Laravel runtime files
+/storage/*.key
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/framework/testing/*
+/storage/logs/*.log
+/storage/app/*.zip
+/storage/app/*.sqlite
+
+# BUT keep storage folder structure including images
+# Images in storage will be kept
+!storage/app/public/
+!storage/app/public/**/*
+!storage/media-library/
+!storage/media-library/**/*
+
+# Keep storage folder structure
+!storage/.gitignore
+!storage/framework/.gitignore
+!storage/framework/cache/.gitignore
+!storage/framework/cache/data/.gitignore
+!storage/framework/sessions/.gitignore
+!storage/framework/views/.gitignore
+!storage/framework/testing/.gitignore
+!storage/logs/.gitignore
+!storage/app/.gitignore
+!storage/app/public/.gitignore
+
+# Cache and logs
+*.cache
+.phpunit.result.cache
+npm-debug.log
+yarn-error.log
+*.log
+
+# IDE files
+/.idea
+/.vscode
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+.htaccess
+
+# Public assets - KEEP images but exclude compiled assets
+/public/hot
+/public/storage
+/public/build
+/public/mix-manifest.json
+
+# Keep images and other essential public files
+!public/images/
+!public/images/**/*
+!public/img/
+!public/img/**/*
+!public/assets/
+!public/assets/**/*
+!public/uploads/
+!public/uploads/**/*
+!public/favicon.ico
+!public/favicon.png
+!public/*.png
+!public/*.jpg
+!public/*.jpeg
+!public/*.gif
+!public/*.svg
+!public/*.webp
+!public/*.ico
+
+# CSS files - exclude generated but keep source
+/public/css/*
+!public/css/.gitkeep
+!public/css/*.css
+
+# JS files - exclude compiled but keep source
+/public/js/*.js*
+!public/js/.gitkeep
+!public/js/core/
+!public/js/core/**/*
+!public/js/iqonic-script/
+!public/js/iqonic-script/**/*
+!public/js/setting-init.js
+!public/js/custom.js
+
+# Modules
+/public/modules/**/*
+!public/modules/.gitkeep
+
+# Laravel specific
+Homestead.json
+Homestead.yaml
+auth.json
+_ide_helper.php
+_ide_helper_models.php
+.phpcs.cache
+
+# Media library
+/storage/media-library/**/*
+!storage/media-library/.gitkeep
+
+# Database
+*.sqlite
+*.sqlite-journal
+
+# Server specific
+/.phpunit.cache

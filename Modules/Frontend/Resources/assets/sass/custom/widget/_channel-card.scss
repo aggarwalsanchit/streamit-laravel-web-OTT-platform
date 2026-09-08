@@ -1,0 +1,27 @@
+.channel-card {
+    transition: all .3s ease 0s;
+    &:hover {
+        transform: scale(1.03);
+    }
+    .channel-img {
+        min-width: 100%;
+        width: 215px;
+        height: 215px;
+    }
+}
+@include media-breakpoint-down(md) {
+    .channel-card {
+
+        .channel-img {
+            height: 180px;
+        }
+    }
+}
+@include media-breakpoint-down(sm) {
+    .channel-card {
+
+        .channel-img {
+            height: 150px;
+        }
+    }
+}

@@ -1,0 +1,19 @@
+User-agent: *
+
+Disallow: /app/
+Disallow: /admin/
+Disallow: /password/
+Disallow: /reset/
+
+Disallow: /api/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /horizon/
+Disallow: /installer/
+Disallow: /modules/
+
+Disallow: /.env
+Disallow: /composer.json
+Disallow: /package.json
+
+Allow: /

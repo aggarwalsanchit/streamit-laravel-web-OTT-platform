@@ -1,0 +1,169 @@
+.media-scroll {
+  height: 68vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-padding-right: 10px;
+}
+
+.breck-anywhere {
+  line-break: anywhere;
+}
+
+/* Simple scroll container - no design changes */
+.media-scroll-container {
+    /* Only add scroll functionality, keep original design */
+    background: transparent;
+}
+
+/* Custom scrollbar for better UX */
+.media-scroll-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.media-scroll-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.media-scroll-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.media-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.card.folder-card {
+  .card-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+#sortable {
+  .accordion-collapse {
+    top: -4px;
+    position: relative;
+    border: 2px solid var(--bs-gray-900);
+    padding: 1.5rem;
+  }
+}
+
+.iq-media-images {
+  text-align: center;
+
+  img {
+    aspect-ratio: 5/5;
+    width: 100%;
+    height: auto;
+  }
+
+  .media-title {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+div:where(.swal2-container) {
+  z-index: 9999 !important;
+}
+
+.swal2-container {
+  .swal2-html-container {
+    color: var(--bs-body-color);
+  }
+}
+
+.select2-container:has(.select2-dropdown) {
+  width: Auto !important;
+}
+
+.star-rating {
+  display: flex;
+}
+
+.star {
+  font-size: 1.2rem;
+  color: var(--bs-border-color);
+  /* Default color for empty stars */
+  margin-right: 2px;
+}
+
+.star.filled {
+  color: var(--bs-warning);
+  /* Color for filled stars */
+}
+
+.modal {
+  .btn-group.flex-wrap {
+    gap: 1rem;
+    .btn {
+      border-radius: var(--bs-border-radius);
+    }
+  }
+}
+
+#search-bar-container {
+  .input-group-text {
+    padding-left: 1rem;
+  }
+  .form-control {
+    padding: .5rem 2.5rem .5rem .5rem;
+  }
+  .clear-search {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0;
+    z-index: 99;
+  }
+}
+
+@media (max-width: 767px) {
+  .setting-sidebar-inner {
+    overflow-y: auto;
+    height: 75vh;
+  }
+}
+
+.box-preview-image{
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.notification-user {
+  width: 50px;
+  min-width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+/* Filter count badge styling for Advanced Filter button */
+.filter-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--bs-heading-color);;
+  background-color: var(--bs-primary);
+  border-radius: 9px;
+  vertical-align: middle;
+}
+
+

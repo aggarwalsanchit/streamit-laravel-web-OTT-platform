@@ -1,0 +1,18 @@
+.trailer-card {
+    background: var(--bs-gray-900);
+    border-radius: var(--bs-border-radius);
+    transition: all 0.3s ease-in-out;
+    .trailer-image {
+        img {
+            aspect-ratio: 16/9;
+            border-radius: var(--bs-border-radius) var(--bs-border-radius) 0 0;
+        }
+    }
+    .trailer-details {
+        padding: 1rem;
+    }
+    &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 30px rgba(var(--bs-primary-rgb), 0.3);
+    }
+}

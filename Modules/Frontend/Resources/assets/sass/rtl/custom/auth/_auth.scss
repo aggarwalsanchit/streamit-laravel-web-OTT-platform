@@ -1,0 +1,30 @@
+.user-login-card {
+    .input-group {
+        .form-control {
+            &:focus {
+                border-color: transparent;
+            }
+        }
+    }
+}
+
+.password-ok-tick {
+  display: none;
+  position: absolute;
+  right: 2.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.iti__country-container {
+    left: auto;
+    right: 1rem;
+}
+
+.form-control.iti__tel-input {
+    text-align: right;
+    padding-left: 1rem !important;
+    padding-right: 90px !important;
+}

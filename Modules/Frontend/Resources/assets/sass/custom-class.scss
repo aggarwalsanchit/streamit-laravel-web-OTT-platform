@@ -1,0 +1,44 @@
+.add-profile-modal {
+    .select-profile-slider {
+        max-height: 220px;
+        position: relative;
+
+        .slick-prev,
+        .slick-next {
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+        }
+
+        .slick-prev {
+            left: 0;
+        }
+
+        .slick-next {
+            right: 0;
+        }
+
+        .slick-prev:before,
+        .slick-next:before {
+            content: none;
+        }
+
+        .slick-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bs-white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+
+        .slick-dots {
+            bottom: -35px;
+        }
+    }
+}

@@ -1,0 +1,107 @@
+.input-style-text {
+    background-color: transparent;
+    color: var(--bs-heading-color);
+}
+
+.input-group {
+    .form-control {
+        border-right: 0;
+
+        &+ .input-group-text {
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            border-left: 0;
+        }
+
+        &:focus {
+            &+ .input-group-text {
+                border-color: var(--bs-primary);
+            }
+        }
+    }
+}
+
+.input-style-box {
+    background-color: transparent;
+    color: var(--bs-heading-color);
+
+    &:focus {
+        background-color: transparent;
+    }
+}
+
+input::-internal-autofill-selected,
+input::-webkit-autofill:focus,
+input::-webkit-autofill:active,
+input::-webkit-autofill:focus,
+input::-webkit-autofill:hover {
+    color: var(--bs-body-color);
+    background-color: var(--bs-gray-900);
+    border-color: transparent;
+}
+
+.card {
+    .form-control {
+        background-color: var(--bs-body-bg);
+    }
+}
+
+.bg-body {
+    .form-control {
+        background-color: var(--bs-gray-900);
+    }
+}
+
+
+.custom-close-btn {
+    width: 37px;          /* increase width */
+    height: 37px;         /* increase height */
+    display: flex;        /* center content */
+    align-items: center;  /* vertical center */
+    justify-content: center; /* horizontal center */
+    padding: 0;           /* remove padding */
+    z-index: 9999;        /* ensure button is above other elements */
+    pointer-events: auto; /* ensure clicks are captured */   /* establish stacking context */
+}
+
+.custom-close-btn {
+    i { font-size: 1.5rem; /* increase icon size */ }
+}
+
+.toggle-switch {
+    position: relative; 
+    width: 50px; height: 
+    28px;
+    input {
+        opacity: 0; 
+        width: 0; 
+        height: 0;
+        &:checked + .slider {
+            background: var(--bs-primary);
+            &::before {
+                transform: translateX(22px);
+            }
+        }
+    }
+    .slider {
+        position: absolute; 
+        cursor: pointer; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        bottom: 0; 
+        background: #6c757d; 
+        transition: .3s; 
+        border-radius: 28px;
+        &::before {
+            position: absolute; 
+            content: ""; 
+            height: 20px; 
+            width: 20px; 
+            left: 4px; 
+            bottom: 4px; 
+            background: white; 
+            transition: .3s; 
+            border-radius: 50%;
+        }
+    }
+}

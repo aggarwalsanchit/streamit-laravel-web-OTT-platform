@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'title' => 'Currencies',
+    'lbl_edit' => 'Edit Currency',
+    'lbl_add' => 'Add New Currency',
+    'lbl_currency_name' => 'Currency Name',
+    'lbl_currency_symbol' => 'Currency Symbol',
+    'lbl_currency_code' => 'Currency Code',
+    'lbl_is_primary' => 'Is Primary',
+    'lbl_currency_position' => 'Currency Position',
+    'lbl_thousand_separatorn' => 'Thousand Separatorn',
+    'lbl_decimal_separator' => 'Decimal Separator',
+    'lbl_number_of_decimals' => 'Number of Decimals',
+    'lbl_ID' => 'ID',
+    'lbl_action' => 'Action',
+    'currency_format' => 'Currency Format Settings',
+
+    'currency_name_required' => 'Currency name is required.',
+    'currency_name_unique' => 'This currency name already exists. Please choose a different currency.',
+    'currency_symbol_required' => 'Currency symbol is required.',
+    'currency_symbol_unique' => 'This currency symbol already exists. Please choose a different symbol.',
+    'currency_code_required' => 'Currency code is required.',
+    'currency_code_unique' => 'This currency code already exists. Please choose a different code.',
+    'currency_position_required' => 'Currency position is required.',
+    'currency_position_in' => 'Currency position must be one of: left, right, left_with_space, right_with_space.',
+    'thousand_separator_required' => 'Thousand separator is required.',
+    'decimal_separator_required' => 'Decimal separator is required.',
+    'no_of_decimal_required' => 'Number of decimals is required.',
+    'no_of_decimal_integer' => 'Number of decimals must be an integer.',
+];

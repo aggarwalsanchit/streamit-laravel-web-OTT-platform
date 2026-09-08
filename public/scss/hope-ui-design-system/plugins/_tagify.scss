@@ -1,0 +1,28 @@
+.tagify {
+    --tag-bg: var(--bs-primary);
+    --tag-hover: var(--bs-primary);
+    --input-color: var(--bs-body-color);
+    --placeholder-color: var(--bs-secondary-color);
+    --placeholder-color-focus: var(--bs-secondary-color);
+    --tag-pad: 0.786rem 1.5rem;
+    padding: .3rem 1.5rem;
+}
+
+.tagify__input {
+    padding: 0;
+    line-height: 1.3;
+    min-width: 200px !important; // Ensure enough width for full placeholder text
+}
+
+.tagify__input::before {
+    white-space: normal !important; // Allow placeholder text to wrap if needed
+    text-overflow: clip !important; // Prevent ellipsis truncation
+    overflow: visible !important;
+    max-width: none !important;
+}
+
+.tagify__tag {
+    padding: 0;
+    --tag-pad: .3rem .5rem;
+    line-height: 1;
+}
