@@ -1,0 +1,11 @@
+{
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/css/icon.min.css": "/css/icon.min.css",
+    "/css/libs.min.css": "/css/libs.min.css",
+    "/css/backend.css": "/css/backend.css",
+    "/css/custom.css": "/css/custom.css",
+    "/js/backend.js": "/js/backend.js",
+    "/js/import-export.min.js": "/js/import-export.min.js",
+    "/js/media/media.min.js": "/js/media/media.min.js"
+}
