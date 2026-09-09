@@ -33,25 +33,34 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
-# Create .env file
-RUN if [ -f .env.example ]; then cp .env.example .env; else echo "APP_ENV=production" > .env; fi
+# 🔧 Create .env file with all required variables
+RUN cp .env.example .env 2>/dev/null || echo "APP_ENV=production" > .env
 
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# 🔧 Generate app key
+RUN php artisan key:generate --force || echo "Key generation failed"
 
-# Generate application key
-RUN php artisan key:generate --force || true
+# 🔧 Try to run migrations (will fail but show errors)
+RUN php artisan migrate --force || echo "Migration failed"
 
-# Create storage link
-RUN php artisan storage:link || true
+# 🔧 Create storage link
+RUN php artisan storage:link || echo "Storage link failed"
 
-# Set permissions
+# 🔧 Clear caches
+RUN php artisan config:clear || echo "Config clear failed"
+RUN php artisan cache:clear || echo "Cache clear failed"
+RUN php artisan view:clear || echo "View clear failed"
+
+# 🔧 Set permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Expose port 8080
+# 🔧 Enable error reporting
+RUN echo "display_errors = On" >> /usr/local/etc/php/conf.d/errors.ini && \
+    echo "display_startup_errors = On" >> /usr/local/etc/php/conf.d/errors.ini && \
+    echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/errors.ini
+
 EXPOSE 8080
 
-# Start PHP built-in server on 0.0.0.0:8080
+# 🔧 Start server with error display
 CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
