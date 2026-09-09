@@ -30,7 +30,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# 🔧 FIX: Configure Apache to listen on all interfaces and port 8080
+# 🔧 FIX: Configure Apache to use port 8080 and public directory
 RUN sed -i 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf && \
     sed -i 's/:80/:8080/g' /etc/apache2/sites-available/000-default.conf && \
     echo "ServerName localhost" >> /etc/apache2/apache2.conf
@@ -40,6 +40,11 @@ WORKDIR /var/www/html
 
 # Copy application files
 COPY . .
+
+# 🔧 FIX: Set DocumentRoot to public directory
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 # Create .env file
 RUN if [ -f .env.example ]; then cp .env.example .env; else echo "APP_ENV=production" > .env; fi
