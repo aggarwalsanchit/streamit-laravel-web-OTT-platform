@@ -33,14 +33,17 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
-# 🔧 CRITICAL FIX: Install Composer dependencies
+# 🔧 Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# 🔧 Create .env file
+# 🔧 Create .env file with proper variables
 RUN cp .env.example .env 2>/dev/null || echo "APP_ENV=production" > .env
 
 # 🔧 Generate app key
 RUN php artisan key:generate --force || echo "Key generation failed"
+
+# 🔧 Run migrations
+RUN php artisan migrate --force || echo "Migration failed"
 
 # 🔧 Create storage link
 RUN php artisan storage:link || echo "Storage link failed"
@@ -55,12 +58,14 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# 🔧 Enable error reporting
+# 🔧 Enable FULL error reporting
 RUN echo "display_errors = On" >> /usr/local/etc/php/conf.d/errors.ini && \
     echo "display_startup_errors = On" >> /usr/local/etc/php/conf.d/errors.ini && \
-    echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/errors.ini
+    echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/errors.ini && \
+    echo "log_errors = On" >> /usr/local/etc/php/conf.d/errors.ini && \
+    echo "error_log = /var/www/html/storage/logs/php-error.log" >> /usr/local/etc/php/conf.d/errors.ini
 
 EXPOSE 8080
 
-# 🔧 Start server
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
+# 🔧 Start server with error display
+CMD ["sh", "-c", "php -S 0.0.0.0:8080 -t public 2>&1"]
