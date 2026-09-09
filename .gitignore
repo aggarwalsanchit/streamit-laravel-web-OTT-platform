@@ -58,7 +58,6 @@ Thumbs.db
 /public/hot
 /public/storage
 /public/build
-/public/mix-manifest.json
 
 # Keep images and other essential public files
 !public/images/

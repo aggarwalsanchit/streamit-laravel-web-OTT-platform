@@ -1,4 +1,3 @@
-# Use PHP 8.2 with Apache
 FROM php:8.2-apache
 
 # Install system dependencies
@@ -31,41 +30,33 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
+# 🔧 FIX: Configure Apache to listen on all interfaces and port 8080
+RUN sed -i 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf && \
+    sed -i 's/:80/:8080/g' /etc/apache2/sites-available/000-default.conf && \
+    echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 # Set working directory
 WORKDIR /var/www/html
 
 # Copy application files
 COPY . .
 
-# Copy .env.example to .env if not exists
-RUN if [ ! -f .env ]; then cp .env.example .env; fi
+# Create .env file
+RUN if [ -f .env.example ]; then cp .env.example .env; else echo "APP_ENV=production" > .env; fi
 
-# 🔧 FIX: Remove Telescope references
-RUN sed -i '/TelescopeServiceProvider/d' config/app.php 2>/dev/null || true
-RUN rm -f app/Providers/TelescopeServiceProvider.php 2>/dev/null || true
-RUN rm -f config/telescope.php 2>/dev/null || true
-
-# 🔧 FIX: Install dependencies (skip scripts to avoid Telescope errors)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
-
-# 🔧 Run package discover separately with error handling
-RUN php artisan package:discover --ansi || true
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Generate application key
 RUN php artisan key:generate --force || true
+
+# Create storage link
+RUN php artisan storage:link || true
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
-
-# Configure Apache
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
-# Configure DocumentRoot
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 # Configure PHP
 RUN echo "upload_max_filesize = 100M" >> /usr/local/etc/php/conf.d/uploads.ini \
@@ -73,5 +64,5 @@ RUN echo "upload_max_filesize = 100M" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/memory.ini \
     && echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/timeout.ini
 
-EXPOSE 80
+EXPOSE 8080
 CMD ["apache2-foreground"]
