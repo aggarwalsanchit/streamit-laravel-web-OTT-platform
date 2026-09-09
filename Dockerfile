@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -27,31 +27,6 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
-
-# 🔧 CRITICAL FIX: Configure Apache to bind to 0.0.0.0:8080
-RUN echo "Listen 8080" > /etc/apache2/ports.conf && \
-    echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
-    echo "NameVirtualHost *:8080" >> /etc/apache2/apache2.conf
-
-# Create a custom site configuration
-RUN cat > /etc/apache2/sites-available/000-default.conf << 'EOF'
-<VirtualHost *:8080>
-    ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/html/public
-    
-    <Directory /var/www/html/public>
-        Options Indexes FollowSymLinks
-        AllowOverride All
-        Require all granted
-    </Directory>
-    
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-EOF
-
 # Set working directory
 WORKDIR /var/www/html
 
@@ -75,11 +50,8 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Configure PHP
-RUN echo "upload_max_filesize = 100M" >> /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "post_max_size = 100M" >> /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/memory.ini \
-    && echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/timeout.ini
-
+# Expose port 8080
 EXPOSE 8080
-CMD ["apache2-foreground"]
+
+# Start PHP built-in server on 0.0.0.0:8080
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
