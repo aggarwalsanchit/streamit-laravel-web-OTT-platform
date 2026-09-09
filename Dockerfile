@@ -33,14 +33,14 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
-# 🔧 Create .env file with all required variables
+# 🔧 CRITICAL FIX: Install Composer dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# 🔧 Create .env file
 RUN cp .env.example .env 2>/dev/null || echo "APP_ENV=production" > .env
 
 # 🔧 Generate app key
 RUN php artisan key:generate --force || echo "Key generation failed"
-
-# 🔧 Try to run migrations (will fail but show errors)
-RUN php artisan migrate --force || echo "Migration failed"
 
 # 🔧 Create storage link
 RUN php artisan storage:link || echo "Storage link failed"
@@ -62,5 +62,5 @@ RUN echo "display_errors = On" >> /usr/local/etc/php/conf.d/errors.ini && \
 
 EXPOSE 8080
 
-# 🔧 Start server with error display
+# 🔧 Start server
 CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
