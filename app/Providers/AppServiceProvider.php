@@ -12,6 +12,7 @@ use Illuminate\Translation\Translator;
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -42,7 +43,10 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {
+    {	
+    	if (config('app.env') === 'production') {
+        	\Illuminate\Support\Facades\URL::forceScheme('https');
+    	}
         Schema::defaultStringLength(191);
 
         // Password policy (A07): min length, letters, numbers
