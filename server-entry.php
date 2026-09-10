@@ -5,20 +5,18 @@
  * Responds to health checks WITHOUT booting Laravel.
  */
 
-// Get the request path
 $uri = $_SERVER['REQUEST_URI'] ?? '/';
 $path = parse_url($uri, PHP_URL_PATH);
 
-// 🔥 ULTRA-FAST HEALTH CHECK (no Laravel boot!)
-// Responds with a 200 OK to anything hitting these paths.
-if (in_array($path, ['/', '/health', '/up', '/healthz'])) {
+// 🔥 ONLY these paths get the instant health response
+if (in_array($path, ['/health', '/up', '/healthz'], true)) {
     header('Content-Type: application/json');
     http_response_code(200);
     echo json_encode(['status' => 'healthy', 'time' => date('c')]);
     exit;
 }
 
-// 🔧 Normal Laravel boot for everything else (real users)
+// 🔧 Everything else goes to real Laravel
 error_reporting(E_ALL & ~E_DEPRECATED);
 ini_set('display_errors', '1');
 
