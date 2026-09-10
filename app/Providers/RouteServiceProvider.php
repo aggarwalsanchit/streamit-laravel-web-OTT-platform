@@ -10,42 +10,27 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    /**
-     * The path to the "home" route for your application.
-     *
-     * This is used by Laravel authentication to redirect users after login.
-     *
-     * @var string
-     */
-
-
     public const USER_LOGIN_REDIRECT = '/';
     public const HOME = '/app/dashboard';
 
-    /**
-     * Define your route model bindings, pattern filters, etc.
-     *
-     * @return void
-     */
     public function boot()
     {
         $this->configureRateLimiting();
 
         $this->routes(function () {
+            // 🔥 HEALTH CHECK ROUTES — must come FIRST, no middleware
+            Route::group([], base_path('routes/health.php'));
+
             Route::prefix('api')
                 ->middleware('api')
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware('web','checkInstallation')
+            // Web routes with installation check
+            Route::middleware('web', 'checkInstallation')
                 ->group(base_path('routes/web.php'));
         });
     }
 
-    /**
-     * Configure the rate limiters for the application.
-     *
-     * @return void
-     */
     protected function configureRateLimiting()
     {
         RateLimiter::for('global', function ($request) {
@@ -59,7 +44,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapWebRoutes();
-        $this->mapAccountsRoutes(); // Add this line
+        $this->mapAccountsRoutes();
     }
 
     protected function mapAccountsRoutes()
