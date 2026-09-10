@@ -36,36 +36,22 @@ COPY . .
 # 🔧 Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# 🔧 Create .env file with proper variables
-RUN cp .env.example .env 2>/dev/null || echo "APP_ENV=production" > .env
-
-# 🔧 Generate app key
-RUN php artisan key:generate --force || echo "Key generation failed"
-
-# 🔧 Run migrations
-RUN php artisan migrate --force || echo "Migration failed"
-
-# 🔧 Create storage link
-RUN php artisan storage:link || echo "Storage link failed"
-
-# 🔧 Clear caches
-RUN php artisan config:clear || echo "Config clear failed"
-RUN php artisan cache:clear || echo "Cache clear failed"
-RUN php artisan view:clear || echo "View clear failed"
+# 🔧 Create .env file if not exists (do NOT overwrite Render env vars)
+RUN if [ ! -f .env ]; then cp .env.example .env 2>/dev/null || echo "APP_ENV=production" > .env; fi
 
 # 🔧 Set permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# 🔧 Enable FULL error reporting
+# 🔧 Enable FULL error reporting (visible in Render logs)
 RUN echo "display_errors = On" >> /usr/local/etc/php/conf.d/errors.ini && \
     echo "display_startup_errors = On" >> /usr/local/etc/php/conf.d/errors.ini && \
     echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/errors.ini && \
     echo "log_errors = On" >> /usr/local/etc/php/conf.d/errors.ini && \
-    echo "error_log = /var/www/html/storage/logs/php-error.log" >> /usr/local/etc/php/conf.d/errors.ini
+    echo "error_log = /dev/stderr" >> /usr/local/etc/php/conf.d/errors.ini
 
 EXPOSE 8080
 
-# 🔧 Start server with error display
-CMD ["sh", "-c", "php -S 0.0.0.0:8080 -t public 2>&1"]
+# 🔧 Start server with our safe debug entry point
+CMD ["php", "-S", "0.0.0.0:8080", "server-entry.php"]
