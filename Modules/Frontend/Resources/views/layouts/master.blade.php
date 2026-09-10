@@ -230,8 +230,8 @@
 
 
     @include('frontend::components.partials.back-to-top')
-    <script src="{{ mix('modules/frontend/script.js') }}" defer></script>
-    <script src="{{ mix('js/backend-custom.js') }}" defer></script>
+    <script src="{{ asset('modules/frontend/script.js') }}" defer></script>
+    <script src="{{ asset('js/backend-custom.js') }}" defer></script>
 
 
 

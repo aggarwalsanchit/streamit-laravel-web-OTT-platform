@@ -4,7 +4,7 @@
     data-is-liked="{{ $isLiked ? 'true' : 'false' }}">
     <i class="{{ $isLiked == true ? 'ph-fill ph-heart' : 'ph ph-heart' }}"></i>
 </button>
-{{-- <script src="{{ mix('js/backend-custom.js') }}"></script>
+{{-- <script src="{{ asset('js/backend-custom.js') }}"></script>
 <script>
     $(document).ready(function() {
 
