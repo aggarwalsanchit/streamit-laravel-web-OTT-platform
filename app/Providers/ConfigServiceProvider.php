@@ -4,84 +4,115 @@ namespace App\Providers;
 
 use Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class ConfigServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap the application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
-    }
-
-    /**
      * Register the application services.
      *
-     * @return void
+     * ⚠️  Do NOT query the database here — it runs on EVERY request,
+     *     including Render's health checks, and will cause 502 timeouts.
      */
     public function register()
     {
+        // Intentionally left empty.
+        // Settings are loaded lazily in boot() below.
+    }
+
+    /**
+     * Bootstrap the application services.
+     */
+    public function boot()
+    {
+        // Skip DB work in console (build, migrations, queue workers)
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+
+        // Skip for Render health checks & asset requests
+        if ($this->isHealthCheck()) {
+            return;
+        }
+
+        // Skip if a previous request already loaded the settings
+        if (Config::get('app._settings_loaded')) {
+            return;
+        }
+
         try {
-            if (\Schema::hasTable('settings')) {
-                $settings = DB::table('settings')->whereIn('type', ['mail_config', 'bussiness', 'misc'])->get();
-                if (count($settings) > 0) { //checking if table is not empty
-                    $app_name = $this->getSetting($settings, 'app_name');
-                    $mail_driver = $this->getSetting($settings, 'mail_driver');
-                    $mail_host = $this->getSetting($settings, 'mail_host');
-                    $mail_port = $this->getSetting($settings, 'mail_port');
-                    $mail_from = $this->getSetting($settings, 'mail_from');
-                    $from_name = $this->getSetting($settings, 'from_name');
-                    $mail_encryption = $this->getSetting($settings, 'mail_encryption');
-                    $mail_username = $this->getSetting($settings, 'mail_username');
-                    $mail_password = $this->getSetting($settings, 'mail_password');
-                    $local = $this->getSetting($settings, 'default_language');
-                    if (isset($app_name)) {
-                        Config::set('app.name', $app_name);
-                    }
-                    if (isset($mail_driver)) {
-                        Config::set('mail.driver', $mail_driver);
-                    }
-                    if (isset($mail_host)) {
-                        Config::set('mail.host', $mail_host);
-                    }
-                    if (isset($mail_port)) {
-                        Config::set('mail.port', $mail_port);
-                    }
-                    if (isset($mail_from)) {
-                        Config::set('mail.from.address', $mail_from);
-                    }
-                    if (isset($from_name)) {
-                        Config::set('mail.from.name', $from_name);
-                    }
-                    if (isset($mail_encryption)) {
-                        Config::set('mail.encryption', $mail_encryption);
-                    }
-                    if (isset($mail_username)) {
-                        Config::set('mail.username', $mail_username);
-                    }
-                    if (isset($mail_password)) {
-                        Config::set('mail.password', $mail_password);
-                    }
-                    if (isset($local)) {
-                        Config::set('app.locale', $local);
-                    }
-                }
+            if (!Schema::hasTable('settings')) {
+                return;
             }
-        } catch (\Exception $e) {
+
+            $settings = DB::table('settings')
+                ->whereIn('type', ['mail_config', 'bussiness', 'misc'])
+                ->get();
+
+            if ($settings->count() > 0) {
+                $this->applySettings($settings);
+            }
+
+            // Mark as loaded so we don't repeat this in the same request
+            Config::set('app._settings_loaded', true);
+
+        } catch (\Throwable $e) {
+            // Never let settings crash the app
+            Log::warning('ConfigServiceProvider: ' . $e->getMessage());
         }
     }
 
+    /**
+     * Apply the settings to the Config repository.
+     */
+    protected function applySettings($settings): void
+    {
+        $map = [
+            'app_name'          => ['app.name',          null],
+            'mail_driver'       => ['mail.driver',       null],
+            'mail_host'         => ['mail.host',         null],
+            'mail_port'         => ['mail.port',         null],
+            'mail_from'         => ['mail.from.address', null],
+            'from_name'         => ['mail.from.name',    null],
+            'mail_encryption'   => ['mail.encryption',   null],
+            'mail_username'     => ['mail.username',     null],
+            'mail_password'     => ['mail.password',     null],
+            'default_language'  => ['app.locale',        null],
+        ];
+
+        foreach ($map as $settingName => [$configKey, $default]) {
+            $value = $this->getSetting($settings, $settingName);
+            if ($value !== null) {
+                Config::set($configKey, $value);
+            }
+        }
+    }
+
+    /**
+     * Look up a single setting value from the collection.
+     */
     public function getSetting($model, $name)
     {
         $query = $model->where('name', $name)->first();
-        if (isset($query)) {
-            return $query->val;
+        return $query->val ?? null;
+    }
+
+    /**
+     * Skip DB queries for Render's health checks and static assets.
+     */
+    protected function isHealthCheck(): bool
+    {
+        if (!app()->bound('request')) {
+            return false;
         }
 
-        return null;
+        $path = request()->path();
+
+        // Render health checks + static assets
+        return in_array($path, ['up', 'health', 'healthz', 'favicon.ico', 'robots.txt'], true)
+            || str_starts_with($path, '_')
+            || str_starts_with($path, 'build/');
     }
 }
