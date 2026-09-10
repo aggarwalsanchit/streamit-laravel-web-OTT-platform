@@ -7,5 +7,7 @@
     "/css/custom.css": "/css/custom.css",
     "/js/backend.js": "/js/backend.js",
     "/js/import-export.min.js": "/js/import-export.min.js",
-    "/js/media/media.min.js": "/js/media/media.min.js"
+    "/js/media/media.min.js": "/js/media/media.min.js",
+    "/modules/frontend/script.js": "/modules/frontend/script.js",
+    "/modules/frontend/style.css": "/modules/frontend/style.css"
 }

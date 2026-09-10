@@ -93,9 +93,8 @@ Thumbs.db
 !public/js/setting-init.js
 !public/js/custom.js
 
-# Modules
-/public/modules/**/*
-!public/modules/.gitkeep
+# Modules - INCLUDE source files, EXCLUDE only source maps (large)
+/public/modules/**/*.map
 
 # Laravel specific
 Homestead.json
