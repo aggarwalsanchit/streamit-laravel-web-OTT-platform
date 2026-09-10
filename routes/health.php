@@ -2,17 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-| Ultra-fast health check for Render.
-*/
-
-Route::get('/health', function () {
+Route::match(['get', 'head'], '/health', function () {
     return response()->json([
         'status' => 'healthy',
         'time' => now()->toIso8601String(),
     ]);
 });
 
-Route::head('/health', function () {
-    return response()->noContent(200);
+Route::match(['get', 'head'], '/up', function () {
+    return response()->json([
+        'status' => 'healthy',
+        'time' => now()->toIso8601String(),
+    ]);
 });
