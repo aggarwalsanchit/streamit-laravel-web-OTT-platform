@@ -9,11 +9,21 @@ $uri = $_SERVER['REQUEST_URI'] ?? '/';
 $path = parse_url($uri, PHP_URL_PATH);
 
 // 🔥 ONLY these paths get the instant health response
-if (in_array($path, ['/health', '/up', '/healthz'], true)) {
-    header('Content-Type: application/json');
-    http_response_code(200);
-    echo json_encode(['status' => 'healthy', 'time' => date('c')]);
-    exit;
+if (in_array($path, ['/health', '/up', '/healthz', '/debug-mix'], true)) {
+    if ($path === '/debug-mix') {
+        $manifest = public_path('mix-manifest.json');
+        $js = public_path('js/backend-custom.js');
+        header('Content-Type: application/json');
+        echo json_encode([
+            'manifest_exists' => file_exists($manifest),
+            'manifest_contents' => file_exists($manifest) ? json_decode(file_get_contents($manifest), true) : null,
+            'backend_custom_exists' => file_exists($js),
+            'js_dir' => is_dir(public_path('js')) ? scandir(public_path('js')) : 'NO',
+            'modules_dir' => is_dir(public_path('modules')) ? scandir(public_path('modules')) : 'NO',
+            'public_path' => public_path(),
+        ], JSON_PRETTY_PRINT);
+        exit;
+    }
 }
 
 // 🔧 Everything else goes to real Laravel
