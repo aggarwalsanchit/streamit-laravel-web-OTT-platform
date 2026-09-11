@@ -33,6 +33,9 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
+# 🔧 Remove any broken symlinks that came from local dev
+RUN find /var/www/html -type l -delete 2>/dev/null || true
+
 # 🔧 Install dependencies with network resilience
 # - COMPOSER_PROCESS_TIMEOUT: longer timeout for slow GitHub API
 # - COMPOSER_IPRESOLVE=4: force IPv4 to avoid IPv6 routing issues
@@ -56,11 +59,22 @@ RUN mkdir -p /var/www/html/storage/framework/{cache,sessions,views,testing} \
     && mkdir -p /var/www/html/storage/app/public \
     && echo "installed" > /var/www/html/storage/installed
 
+# 🔥 CRITICAL FIX: Create public/storage symlink
+# This makes https://yourapp.com/storage/movie/image/x.png work
+RUN mkdir -p /var/www/html/public && \
+    ln -sf /var/www/html/storage/app/public /var/www/html/public/storage
+
 # 🔧 Set permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache \
     && chmod 644 /var/www/html/storage/installed
+
+# 🔧 Verify the symlink and images are in place (visible in build logs)
+RUN echo "=== Verifying storage setup ===" && \
+    ls -la /var/www/html/public/storage && \
+    echo "=== Sample images ===" && \
+    find /var/www/html/storage/app/public -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \) 2>/dev/null | head -10
 
 # Enable error reporting (visible in Render logs)
 RUN echo "display_errors = On" >> /usr/local/etc/php/conf.d/errors.ini \
