@@ -33,8 +33,13 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
-# Install dependencies (no scripts to avoid DB queries during build)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+# 🔧 Install dependencies with network resilience
+# - COMPOSER_PROCESS_TIMEOUT: longer timeout for slow GitHub API
+# - COMPOSER_IPRESOLVE=4: force IPv4 to avoid IPv6 routing issues
+# - --prefer-dist: use zip archives instead of git clones
+RUN COMPOSER_PROCESS_TIMEOUT=2000 \
+    COMPOSER_IPRESOLVE=4 \
+    composer install --no-dev --optimize-autoloader --no-interaction --no-scripts --prefer-dist
 
 # Create .env if missing
 RUN if [ ! -f .env ]; then cp .env.example .env 2>/dev/null || echo "APP_ENV=production" > .env; fi
