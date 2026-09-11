@@ -2,7 +2,7 @@
 /**
  * server-entry.php
  * Fast-entry wrapper for Render.
- * Serves static files directly; boots Laravel for everything else.
+ * Serves static files directly (including symlinked storage); boots Laravel otherwise.
  */
 
 $uri = $_SERVER['REQUEST_URI'] ?? '/';
@@ -17,38 +17,65 @@ if (in_array($path, ['/health', '/up', '/healthz'], true)) {
     exit;
 }
 
-// 🔧 SERVE STATIC FILES DIRECTLY (CSS, JS, images, fonts, etc.)
-$filePath = realpath($publicPath . $path);
-if ($filePath && str_starts_with($filePath, realpath($publicPath)) && is_file($filePath)) {
-    // Determine MIME type
-    $mimeTypes = [
-        'css'   => 'text/css',
-        'js'    => 'application/javascript',
-        'json'  => 'application/json',
-        'png'   => 'image/png',
-        'jpg'   => 'image/jpeg',
-        'jpeg'  => 'image/jpeg',
-        'gif'   => 'image/gif',
-        'svg'   => 'image/svg+xml',
-        'ico'   => 'image/x-icon',
-        'woff'  => 'font/woff',
-        'woff2' => 'font/woff2',
-        'ttf'   => 'font/ttf',
-        'eot'   => 'application/vnd.ms-fontobject',
-        'map'   => 'application/json',
-        'txt'   => 'text/plain',
-        'xml'   => 'application/xml',
-        'webp'  => 'image/webp',
+// 🔧 SERVE STATIC FILES DIRECTLY
+$mimeTypes = [
+    'css'   => 'text/css',
+    'js'    => 'application/javascript',
+    'mjs'   => 'application/javascript',
+    'json'  => 'application/json',
+    'png'   => 'image/png',
+    'jpg'   => 'image/jpeg',
+    'jpeg'  => 'image/jpeg',
+    'gif'   => 'image/gif',
+    'svg'   => 'image/svg+xml',
+    'ico'   => 'image/x-icon',
+    'bmp'   => 'image/bmp',
+    'webp'  => 'image/webp',
+    'woff'  => 'font/woff',
+    'woff2' => 'font/woff2',
+    'ttf'   => 'font/ttf',
+    'otf'   => 'font/otf',
+    'eot'   => 'application/vnd.ms-fontobject',
+    'map'   => 'application/json',
+    'txt'   => 'text/plain',
+    'xml'   => 'application/xml',
+    'pdf'   => 'application/pdf',
+    'mp4'   => 'video/mp4',
+    'webm'  => 'video/webm',
+    'mp3'   => 'audio/mpeg',
+];
+
+$ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+// Only handle requests with a known static-file extension
+if (isset($mimeTypes[$ext])) {
+    // Build the candidate paths:
+    // 1. Direct file inside public/
+    // 2. Symlink resolution (public/storage/... → storage/app/public/...)
+    $candidates = [
+        $publicPath . $path,                        // public/movie/...
+        $publicPath . '/storage' . preg_replace('#^/storage#', '', $path), // public/storage/...
     ];
-    
-    $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-    $mime = $mimeTypes[$ext] ?? 'application/octet-stream';
-    
-    header('Content-Type: ' . $mime);
-    header('Content-Length: ' . filesize($filePath));
-    header('Cache-Control: public, max-age=86400');
-    readfile($filePath);
-    exit;
+
+    foreach ($candidates as $candidate) {
+        // realpath() resolves symlinks — this is what we want
+        $real = realpath($candidate);
+
+        if ($real && is_file($real) && is_readable($real)) {
+            // 🔒 Security: only serve files under the project root
+            $projectRoot = realpath(__DIR__);
+            if ($projectRoot && str_starts_with($real, $projectRoot)) {
+                header('Content-Type: ' . $mimeTypes[$ext]);
+                header('Content-Length: ' . filesize($real));
+                header('Cache-Control: public, max-age=86400');
+                header('X-Served-By: static-handler');
+                readfile($real);
+                exit;
+            }
+        }
+    }
+    // If extension is static but file not found, still fall through to Laravel
+    // so that Laravel's own 404 handler or route can respond
 }
 
 // 🔧 Normal Laravel boot for everything else
