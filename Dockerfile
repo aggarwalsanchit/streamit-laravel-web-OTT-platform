@@ -45,10 +45,17 @@ RUN php artisan key:generate --force || true
 # Remove any cached config (critical)
 RUN rm -f bootstrap/cache/*.php || true
 
-# Set permissions
+# 🔧 Create required storage folders and "installed" flag
+RUN mkdir -p /var/www/html/storage/framework/{cache,sessions,views,testing} \
+    && mkdir -p /var/www/html/storage/logs \
+    && mkdir -p /var/www/html/storage/app/public \
+    && echo "installed" > /var/www/html/storage/installed
+
+# 🔧 Set permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+    && chmod -R 755 /var/www/html/bootstrap/cache \
+    && chmod 644 /var/www/html/storage/installed
 
 # Enable error reporting (visible in Render logs)
 RUN echo "display_errors = On" >> /usr/local/etc/php/conf.d/errors.ini \
@@ -57,5 +64,5 @@ RUN echo "display_errors = On" >> /usr/local/etc/php/conf.d/errors.ini \
     && echo "log_errors = On" >> /usr/local/etc/php/conf.d/errors.ini \
     && echo "error_log = /dev/stderr" >> /usr/local/etc/php/conf.d/errors.ini
 
-# The key change: Use a shell to bind to the PORT environment variable, defaulting to 8080
+# Bind to Render's PORT
 CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-8080} server-entry.php"]
